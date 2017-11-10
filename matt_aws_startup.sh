@@ -65,6 +65,7 @@ emacs .emacs
           '(lambda()
              (setq ess-indent-with-fancy-comments nil)
                           ))
+(ess-toggle-underscore nil)                       
 
 ###
 
