@@ -1,0 +1,81 @@
+After login, run these commands to:
+- Become root
+- Clone in BDDS
+- Install emacs
+- Get and configure ESS
+
+sudo -s
+cd /scratch/github/
+git clone https://github.com/PriceLab/BDDS.git
+
+apt install emacs
+
+git clone https://github.com/emacs-ess/ESS.git
+
+cd ~
+emacs .emacs
+
+***Add this to .emacs:
+
+(package-initialize)
+
+(add-to-list 'load-path "/scratch/github/ESS/lisp/")
+(load "ess-site")
+
+(add-hook 'ess-mode-hook
+          '(lambda()
+             (setq ess-indent-with-fancy-comments nil)
+                          ))
+
+cd /scratch/github/
+git clone https://github.com/PriceLab/MotifDb.git
+
+## Create motif dump (just human?) in R:
+library(MotifDb)
+human <- query (MotifDb, 'hsapiens')
+export (human, con='hsapiens-meme.txt', format='meme')
+
+***
+
+***Ask Cory for footprint data
+
+***Also, use this time to make sure that Meta == Option (Terminal -> Preferences -> Profiles -> Keyboard)
+
+Change to footprint directory and copy over 2 files:
+
+cd /scratch/data
+mkdir test_set
+cd test_set
+mkdir brain_hint_20
+mkdir brain_wellington_20
+cp ../footprints/brain_hint_20/ENCSR000DBW_hint.bed ./brain_hint_20/
+cp ../footprints/brain_hint_20/ENCSR000EIJ_hint.bed ./brain_hint_20/
+cp ../footprints/brain_wellington_20/ENCSR000DBW_wellington.bed ./brain_wellington_20/
+cp ../footprints/brain_wellington_20/ENCSR000EIJ_wellington.bed ./brain_wellington_20/
+
+Change to AWS_test directory:
+
+cd /scratch/github/BDDS/footprints/testdb/AWS_test/
+
+**Create the databases (see note_on_bdds)
+
+Install the minid generator:
+git clone https://github.com/ini-bdds/minid.git
+
+apt-get install python-pip
+pip install -U pip setuptools
+cd minid
+pip install .
+
+(first time registration)
+minid.py --register_user --email mrichard@systemsbiology.org --name marichards
+
+Configure the minid file with:
+
+[general]
+minid_server: http://minid.bd2k.org/minid
+user: marichards
+email: mrichard@systemsbiology.org
+orcid:
+code: 1b1ebf63-253d-4282-a3f3-91a84d2edaa6
+

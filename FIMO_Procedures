@@ -1,0 +1,40 @@
+1. Get FIMO installed and test it:
+
+wget http://meme-suite.org/meme-software/4.11.3/meme_4.11.3.tar.gz
+tar zxf meme_4.11.3.tar.gz
+cd meme_4.11.3
+./configure --prefix=$HOME/meme --with-url=http://meme-suite.org --enable-build-libxml2 --enable-build-libxslt
+make
+make test
+make install
+
+2. Add fimo path to .bashrc:
+
+export PATH=$PATH:/home/ubuntu/meme_4.11.3/src/
+
+
+3. Clone in MotifDb:
+
+git clone https://github.com/PriceLab/MotifDb.git
+cd /scratch/github/MotifDb
+R CMD INSTALL .
+
+4. Create and export the motifs in meme format:
+
+hocomoco_mouse <- query(query(MotifDb, 'mmusculus'),'hocomocov10')
+hocomoco_human <- query(query(MotifDb, 'hsapiens'),'hocomocov10')
+jaspar_human <- query(query(MotifDb, 'hsapiens'),'jaspar2016')
+jaspar_mouse <- query(query(MotifDb, 'mmusculus'),'jaspar2016')
+
+export(hocomoco_mouse, con = "./hocomoco_mouse.meme", format = "meme")
+export(hocomoco_human, con = "./hocomoco_human.meme", format = "meme")
+export(jaspar_mouse, con = "./jaspar_mouse.meme", format = "meme")
+export(jaspar_human, con = "./jaspar_human.meme", format = "meme")
+
+5. Add all the chromosome files:
+
+aws s3 cp s3://marichards/GRCh38 . --recursive
+
+6. Create (or copy) a shell script to run the command:
+
+fimo --text --oc . --no-qvalue ./<meme name> ./X.fa > ./X.fimo.txt
